@@ -6,8 +6,8 @@ public class GameofLife {
 
     public boolean[][] board;
 
-    public GameofLife() {
-        board=new boolean[10][10];
+    public GameofLife(int sz1,int sz2) {
+        board=new boolean[sz1][sz2];
         randomAllocator();
         print();
     }
@@ -18,7 +18,7 @@ public class GameofLife {
     public void randomAllocator() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
-                this.board[i][j]=Math.random()>0.50;
+                this.board[i][j]=Math.random()>0.5;
             }
         }
     }
@@ -26,16 +26,28 @@ public class GameofLife {
      * prints the current board
      */
     public void print(){
-        System.out.println("\033c");
+        System.out.print("\033c");
+        System.out.print("      ");
+        for (int i = 0; i < board.length; i++) {
+            System.out.printf("%-3s",i+1);
+        }
+        System.out.print("\n   "+"-".repeat(board.length*3+3)+"\n");
+            
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
+                if(j==0)
+                    System.out.printf("%3s|",i+1);
                 if(board[i][j])
-                    System.out.printf("%2s","0");
+                    System.out.printf("%3s","0");
                 else
-                    System.out.printf("%2s","-");
+                    System.out.printf("%3s",".");
+                if(j==board[0].length-1)
+                    System.out.print(" |");
+                
             }
             System.out.println();
         }
+        System.out.print("   "+"-".repeat(board.length*3+3)+"\n");
     }
 
     /**
@@ -64,9 +76,6 @@ public class GameofLife {
         int count  =   0;
 
         for (int i = top; i <= bottom; i++) {
-            System.out.printf("%s %s\n",i,y-1);
-            System.out.printf("%s %s\n",i,y);
-            System.out.printf("%s %s\n",i,y+1);
             if(i==x)continue;
             count+=getCell_S(i, y);
         }
@@ -78,5 +87,18 @@ public class GameofLife {
         }
         
         return count;
+    }
+    public void round() {
+        int r;
+        print();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                r=checkCells(i, j);
+                if(r<2||r>4)
+                    {board[i][j]=false;}
+                else
+                   {board[i][j]=true;}
+            }
+        }
     }
 }
